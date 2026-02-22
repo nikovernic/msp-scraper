@@ -20,10 +20,11 @@ from src.scrapers.directories.yelp import YelpScraper
 from src.scrapers.directories.google_places import GooglePlacesScraper
 from src.scrapers.directories.clutch import ClutchScraper
 from src.scrapers.directories.msp501 import MSP501Scraper
+from src.scrapers.directories.reddit_msp import RedditMSPScraper
 from src.services.data_processor import DataProcessor
 
 
-VALID_SOURCES = ['yelp', 'google', 'clutch', 'msp501', 'all']
+VALID_SOURCES = ['yelp', 'google', 'clutch', 'msp501', 'reddit', 'all']
 
 
 def run_scrape(
@@ -43,7 +44,7 @@ def run_scrape(
 
     # Expand 'all' into individual sources
     if 'all' in sources:
-        sources = ['yelp', 'google', 'clutch', 'msp501']
+        sources = ['yelp', 'google', 'clutch', 'msp501', 'reddit']
 
     logger.info("=" * 70)
     logger.info(f"MSP Scraper - {job_type.upper()} Job")
@@ -119,6 +120,14 @@ def run_scrape(
                 logger.info("=" * 70)
 
                 businesses = run_msp501_scraper(job_type)
+                all_businesses.extend(businesses)
+
+            elif source == 'reddit':
+                logger.info("\n" + "=" * 70)
+                logger.info("Running Reddit r/msp Scraper")
+                logger.info("=" * 70)
+
+                businesses = run_reddit_scraper(job_type)
                 all_businesses.extend(businesses)
 
             else:
@@ -355,6 +364,48 @@ def run_msp501_scraper(job_type: str) -> list:
     stats = scraper.get_stats()
     logger.info(f"\nMSP 501 Scraper Statistics:")
     logger.info(f"  Page fetches: {stats['requests']}")
+    logger.info(f"  Successful: {stats['successes']}")
+    logger.info(f"  Failed: {stats['failures']}")
+    logger.info(f"  Businesses found: {stats['businesses_found']}")
+
+    scraper.close()
+
+    return businesses
+
+
+def run_reddit_scraper(job_type: str) -> list:
+    """
+    Run Reddit r/msp scraper.
+    Extracts MSP business mentions from posts, comments, and flairs.
+
+    Args:
+        job_type: Job type
+
+    Returns:
+        List of business dictionaries
+    """
+    try:
+        scraper = RedditMSPScraper()
+    except ValueError as e:
+        logger.warning(f"Skipping Reddit scraper: {e}")
+        return []
+
+    if job_type == 'full':
+        max_posts = 500
+    elif job_type == 'incremental':
+        max_posts = 200
+    else:
+        max_posts = 50
+
+    logger.info(f"Scanning r/msp (up to {max_posts} posts)...")
+
+    businesses = scraper.scrape({
+        'max_posts': max_posts,
+    })
+
+    stats = scraper.get_stats()
+    logger.info(f"\nReddit r/msp Scraper Statistics:")
+    logger.info(f"  API requests: {stats['requests']}")
     logger.info(f"  Successful: {stats['successes']}")
     logger.info(f"  Failed: {stats['failures']}")
     logger.info(f"  Businesses found: {stats['businesses_found']}")

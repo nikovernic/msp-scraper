@@ -73,6 +73,14 @@ class Settings:
     # Get your key at: https://console.cloud.google.com/apis/credentials
     GOOGLE_PLACES_API_KEY: str = os.getenv('GOOGLE_PLACES_API_KEY', '')
 
+    # Reddit API (for r/msp scraping)
+    # Create app at: https://www.reddit.com/prefs/apps
+    REDDIT_CLIENT_ID: str = os.getenv('REDDIT_CLIENT_ID', '')
+    REDDIT_CLIENT_SECRET: str = os.getenv('REDDIT_CLIENT_SECRET', '')
+    REDDIT_USER_AGENT: str = os.getenv(
+        'REDDIT_USER_AGENT', 'MSPScraper/1.0 (by /u/your_username)'
+    )
+
     # ============================================
     # Proxy Configuration
     # ============================================

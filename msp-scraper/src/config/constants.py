@@ -160,6 +160,7 @@ DEFAULT_RATE_LIMITS = {
     'clutch': 5,  # Conservative — JS-rendered pages
     'google_places': 60,  # Official API
     'msp501': 10,  # Simple HTML pages
+    'reddit': 30,  # Reddit API (OAuth)
     'website': 10,
 }
 
@@ -170,6 +171,7 @@ DEFAULT_TIMEOUTS = {
     'clutch': 45,  # Selenium pages can be slow
     'google_places': 15,
     'msp501': 30,
+    'reddit': 15,
     'website': 45,  # Websites can be slower
 }
 
@@ -204,6 +206,19 @@ MSP501_TIER_RANGES = [
     '400-351',
     '450-401',
     '501-451',
+]
+
+# ============================================
+# Reddit r/msp Configuration
+# ============================================
+REDDIT_MSP_SUBREDDIT = 'msp'
+REDDIT_OAUTH_URL = 'https://oauth.reddit.com'
+REDDIT_TOKEN_URL = 'https://www.reddit.com/api/v1/access_token'
+# Keywords in posts/comments that signal a company mention
+REDDIT_COMPANY_KEYWORDS = [
+    'my msp', 'our msp', 'my company', 'our company', 'i run', 'i own',
+    'we provide', 'our team', 'my business', 'we manage', 'our clients',
+    'we offer', 'my firm', 'our firm', 'we service', 'we support',
 ]
 
 # User agents for rotation
@@ -241,6 +256,7 @@ SOURCE_YELP_API = 'yelp_api'
 SOURCE_CLUTCH = 'clutch'
 SOURCE_GOOGLE_PLACES = 'google_places'
 SOURCE_MSP501 = 'msp501'
+SOURCE_REDDIT = 'reddit_msp'
 SOURCE_COMPANY_WEBSITE = 'company_website'
 SOURCE_LINKEDIN = 'linkedin'
 SOURCE_MANUAL = 'manual'
