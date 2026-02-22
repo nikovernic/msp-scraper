@@ -1,0 +1,58 @@
+[tool.poetry]
+name = "msp-scraper"
+version = "1.0.0"
+description = "MSP business scraper for partnership outreach - finds managed service providers in US/Canada"
+authors = ["Niko Vernic <your.email@example.com>"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.14"
+
+# Core scraping
+scrapy = "^2.11"
+beautifulsoup4 = "^4.12"
+lxml = "^5.1"
+selenium = "^4.16"
+requests = "^2.31"
+
+# Database
+sqlalchemy = "^2.0"
+alembic = "^1.13"
+psycopg2-binary = "^2.9"
+
+# Data processing
+rapidfuzz = "^3.6"  # Modern, fast fuzzy matching (replaces fuzzywuzzy)
+
+# Utilities
+python-dotenv = "^1.0"
+pydantic = "^2.5"
+phonenumbers = "^8.13"
+
+# Scheduling
+apscheduler = "^3.10"
+
+# Logging
+loguru = "^0.7"
+
+# API (optional)
+flask = "^3.0"
+flask-cors = "^4.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4"
+pytest-cov = "^4.1"
+faker = "^21.0"
+black = "^23.12"
+flake8 = "^7.0"
+mypy = "^1.7"
+ipython = "^8.19"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+scrape = "scripts.run_scraper:main"
+init-db = "scripts.init_db:main"
+export = "scripts.export_data:main"
