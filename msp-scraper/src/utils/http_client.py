@@ -150,7 +150,7 @@ class RateLimitedHttpClient:
             self.stats['total_wait_time'] += wait_time
 
         # Prepare headers with rotating user agent
-        headers = kwargs.get('headers', {})
+        headers = kwargs.get('headers') or {}
         if 'User-Agent' not in headers:
             headers['User-Agent'] = self._get_user_agent()
         kwargs['headers'] = headers

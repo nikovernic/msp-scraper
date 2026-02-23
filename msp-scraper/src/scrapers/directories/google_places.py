@@ -78,6 +78,14 @@ class GooglePlacesScraper(BaseScraper):
 
                 time.sleep(random.uniform(0.3, 0.8))
 
+        # Auto-enrich with Place Details to get website/phone
+        # (Text Search doesn't return these, and the data processor
+        # requires at least one contact method)
+        self.logger.info(
+            f"Enriching {len(all_businesses)} businesses with Place Details..."
+        )
+        all_businesses = self.enrich_with_details(all_businesses, max_details=len(all_businesses))
+
         self.stats['businesses_found'] = len(all_businesses)
         self.logger.info(
             f"Google Places scrape complete: {len(all_businesses)} businesses found"
